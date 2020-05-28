@@ -2,12 +2,20 @@
 #include <iostream>
 #include <string>
 using namespace std;
-class Qint
+class QInt
 {
 private:
 	int	_arrayBits[4];
 public:
-	Qint();
-	void Nhap();
+	QInt();
+	string DecToBin();
+	static QInt BinToDec();
+	static string HexToBin();
+
+	static string BinToHex();
+	string DecToHex();
+	static QInt HexToDec();
+
+	QInt operator=(string s);
 };
 
