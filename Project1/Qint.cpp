@@ -113,7 +113,7 @@ string QInt::HexToBin(string str)
 		temp.clear();
 	}
 	return bin;
-};
+}
 QInt QInt::operator<<(int n)
 {
 	if (n < 0)
@@ -152,3 +152,45 @@ QInt QInt::operator>>(int n)
 	}
 	return *this;
 }
+QInt QInt::operator&(QInt other)
+{
+	QInt result;
+	for (int i = 0; i < 4; i++)
+	{
+		result._arrayBits[i] = _arrayBits[i] & other._arrayBits[i];
+	}
+	return result;
+}
+QInt QInt::operator^(QInt other)
+{
+	QInt result;
+	for (int i = 0; i < 4; i++)
+	{
+		result._arrayBits[i] = _arrayBits[i] ^ other._arrayBits[i];
+	}
+	return result;
+}
+QInt QInt::operator|(QInt other)
+{
+	QInt result;
+	for (int i = 0; i < 4; i++)
+	{
+		result._arrayBits[i] = _arrayBits[i] | other._arrayBits[i];
+	}
+	return result;
+}
+QInt QInt::operator~()
+{
+	QInt result;
+	for (int i = 0; i < 4; i++)
+	{
+		result._arrayBits[i] =  ~ _arrayBits[i];
+	}
+	for (int i = 0; i < 4; i++)
+	{
+		_arrayBits[i] = result._arrayBits[i];
+	}
+	return *this;
+}
+
+

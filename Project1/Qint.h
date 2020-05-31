@@ -19,6 +19,10 @@ public:
 	QInt& operator=(string);
 	QInt operator<<(int);
 	QInt operator>>(int);
+	QInt operator^(QInt);
+	QInt operator|(QInt);
+	QInt operator~();
+	QInt operator&(QInt)
 
 };
 
