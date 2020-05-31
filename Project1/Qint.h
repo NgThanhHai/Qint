@@ -9,13 +9,16 @@ private:
 public:
 	QInt();
 	string DecToBin();
-	static QInt BinToDec();
-	static string HexToBin();
+	QInt BinToDec(string);
+	string HexToBin(string);
 
-	static string BinToHex();
+	string BinToHex();
 	string DecToHex();
-	static QInt HexToDec();
+	QInt HexToDec();
 
-	QInt operator=(string s);
+	QInt& operator=(string);
+	QInt operator<<(int);
+	QInt operator>>(int);
+
 };
 
