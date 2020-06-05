@@ -192,5 +192,49 @@ QInt QInt::operator~()
 	}
 	return *this;
 }
+bool QInt::operator<(QInt other)
+{
+	if (_arrayBits[0] != other._arrayBits[0])
+	{
+		if (_arrayBits[0] == 0)
+		{
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+	else
+	{
+	}
+}
+
+void QInt::rol()
+{
+	int lastBit = 0;
+	if ((_arrayBits[0] >> 31) & 1 == 1)
+	{
+		lastBit = 1;
+	}
+	*this << 1;
+	if (lastBit == 1)
+	{
+		_arrayBits[3] = _arrayBits[3] | 1;
+	}
+}
+void QInt::ror()
+{
+	int firstBit = 0;
+	if (_arrayBits[3] & 1 == 1)
+	{
+		firstBit = 1;
+	}
+	*this >> 1;
+	if (firstBit == 1)
+	{
+		_arrayBits[0] = _arrayBits[0] | (1 << 31);
+	}
+}
+
 
 

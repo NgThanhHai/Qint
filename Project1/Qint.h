@@ -22,7 +22,15 @@ public:
 	QInt operator^(QInt);
 	QInt operator|(QInt);
 	QInt operator~();
-	QInt operator&(QInt)
+	QInt operator&(QInt);
+	bool operator==(QInt);
+	bool operator<(QInt);
+	bool operator<=(QInt);
+	bool operator>(QInt);
+	bool operator>=(QInt);
+	bool operator!=(QInt);
+	void rol();
+	void ror();
 
 };
 
