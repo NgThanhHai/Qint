@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 class QInt
 {
@@ -52,5 +53,9 @@ string myPow(int n);
 string multiple2(string s);
 string plusNumInStr(string a, string b);
 void Add(int bits1[], int bits2[], int result[]);
+void Sub(int bits1[], int bits2[], int result[]);
+void ConvertTwoComplement(int bitsSource[], int bitsDes[]);
 void DichPhaiTrenMang(int arrSource[],int arrDes[], int k); 
 void DichTraiTrenMang(int arrSource[], int arrDes[], int k);
+
+vector<string> Parse(string line);
