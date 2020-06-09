@@ -26,8 +26,8 @@ public:
 	QInt operator~();
 	QInt operator&(QInt);
 	
-	void rol();
-	void ror();
+	void Rol();
+	void Ror();
 
 	friend QInt operator+(QInt a, QInt b);
 	friend QInt operator-(QInt a, QInt b);

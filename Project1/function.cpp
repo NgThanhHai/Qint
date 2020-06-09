@@ -1,4 +1,6 @@
 ﻿#include "function.h"
+
+//Cộng 2 mảng nhị phân
 void Add(char bits1[], char bits2[], char result[])
 {
 
@@ -12,6 +14,7 @@ void Add(char bits1[], char bits2[], char result[])
 	}
 }
 
+//Trừ 2 mảng nhị phân
 void Sub(char bits1[], char bits2[], char result[])
 {
 	char temp[128] = { 0 };
@@ -19,6 +22,7 @@ void Sub(char bits1[], char bits2[], char result[])
 	Add(bits1, temp, result);
 }
 
+//Chuyển số bù 2
 void ConvertTwoComplement(char bitsSource[], char bitsDes[])
 {
 	for (int i = 0; i < 128; i++)
@@ -32,6 +36,7 @@ void ConvertTwoComplement(char bitsSource[], char bitsDes[])
 	Add(bitsDes, temp, bitsDes);
 }
 
+//Dịch các phần tử trên mảng sang phải k vị trí
 void DichPhaiTrenMang(char arrSource[], char arrDes[], int k)
 {
 
@@ -44,6 +49,7 @@ void DichPhaiTrenMang(char arrSource[], char arrDes[], int k)
 
 }
 
+//Dịch trái các phần tử trên mảng sang trái k vị trí
 void DichTraiTrenMang(char arrSource[], char arrDes[], int k)// đối với bit dấu 127 là 0
 {
 	int pos = 127;
@@ -54,6 +60,7 @@ void DichTraiTrenMang(char arrSource[], char arrDes[], int k)// đối với bit
 	}
 }
 
+//Cắt chuỗi 
 vector<string> Parse(string line, string seperator)
 {
 	vector<string> tokens;
@@ -79,6 +86,7 @@ vector<string> Parse(string line, string seperator)
 	return tokens;
 }
 
+//Chia chuỗi số hệ 10 cho 2
 string Div2(string s)
 {
 	string result;
@@ -114,6 +122,8 @@ string Div2(string s)
 	return s;
 
 }
+
+//Tính chuỗi số mũ của 2
 string MyPow(int n) //n là số mũ
 {
 	string result = "2";
@@ -128,6 +138,8 @@ string MyPow(int n) //n là số mũ
 
 	return result;
 }
+
+//Nhân chuỗi số hệ 10 với 2
 string Mulp2(string s)
 {
 	int digit = 0, mark = 0;
@@ -169,6 +181,8 @@ string Mulp2(string s)
 
 	return result;
 }
+
+//Cộng hai chuỗi số hệ 10
 string AddStr(string a, string b)
 {
 	string result;

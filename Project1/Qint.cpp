@@ -1,5 +1,6 @@
 ﻿#include "Qint.h"
 
+//Hàm tạo
 QInt::QInt()
 {
 	_arrayBits[0] = 0;
@@ -8,6 +9,9 @@ QInt::QInt()
 	_arrayBits[3] = 0;
 }
 
+//Input: chuỗi dữ liệu, cơ số
+//Output:
+//Nhập vào QInt (_arrayBits) dữ liệu thông qua chuỗi dữ liệu và cơ số của dữ liệu đó (2,10,16)
 void QInt::In(string strData, int base)
 {
 	_arrayBits[0] = 0;
@@ -122,6 +126,9 @@ void QInt::In(string strData, int base)
 	}
 }
 
+//Input: cơ số
+//Output: chuỗi số trên hệ cơ số đưa vào
+//Xuất ra chuỗi số dựa vào cơ số cần xuất
 string QInt::Out(int base)
 {
 	string result;
@@ -231,6 +238,9 @@ string QInt::Out(int base)
 	return result;
 }
 
+//Input: QInt a, QInt b
+//Output: QInt sum là tổng của QInt a và QInt b
+//Quá tải toán tử +
 QInt operator+( QInt a,  QInt b)
 {
 	QInt sum;
@@ -254,6 +264,9 @@ QInt operator+( QInt a,  QInt b)
 	return sum;
 }
 
+//Input: QInt a, QInt b
+//Output: QInt result là hiệu của QInt a - QInt b
+//Quá tải toán tử -
 QInt operator-(QInt a, QInt b)
 {
 	QInt result;
@@ -262,8 +275,6 @@ QInt operator-(QInt a, QInt b)
 	a.ConvertBitToArray(bitsA);
 	b.ConvertBitToArray(bitsB);
 
-	//Chuyển B sang số bù 2
-	
 
 	char bitResult[128] = { 0 };
 	Sub(bitsA, bitsB, bitResult);
@@ -279,6 +290,9 @@ QInt operator-(QInt a, QInt b)
 	
 }
 
+//Input: QInt a, QInt b
+//Output: QInt result là tích của QInt a và QInt b
+//Quá tải toán tử *
 QInt operator*(QInt a, QInt b)
 {
 	QInt result;
@@ -314,6 +328,10 @@ QInt operator*(QInt a, QInt b)
 	return result;
 }
 
+
+//Input: QInt a, QInt b
+//Output: QInt result là thương của QInt a và QInt b
+//Quá tải toán tử /
 QInt operator/(QInt a, QInt b)
 {
 	QInt result;
@@ -375,8 +393,9 @@ QInt operator/(QInt a, QInt b)
 }
 
 
-
-
+//Input:
+//Output:
+//Lưu dữ liệu ở _arrayBits ra mảng array (nhị phân)
 void QInt::ConvertBitToArray(char array[])
 {
 	
@@ -395,14 +414,16 @@ void QInt::ConvertBitToArray(char array[])
 	}
 }
 
-
+//Input: dữ liệu, cơ số nguồn, cơ số đích
+//Output: trả ra chuỗi số trên hệ cơ số đích
+//Chuyển đổi giữa các hệ các cơ số
 string QInt::Convert(string strData, int base1, int base2)
 {
 	this->In(strData, base1);
 	return this->Out(base2);
 }
 
-
+//Chuyển đổi chuỗi số từ cơ số 16 sang cơ số 2
 string QInt::HexToBin(string str)
 {
 	string bin;
@@ -469,7 +490,9 @@ string QInt::HexToBin(string str)
 	return bin;
 }
 
-
+//Input: QInt a, n: số bit dịch trái
+//Output:
+//Quá tải toán tử << (SHL)
 QInt QInt::operator<<(int n)
 {
 	
@@ -489,6 +512,10 @@ QInt QInt::operator<<(int n)
 
 	return *this;
 }
+
+//Input: QInt a, n: số bit dịch phải số học
+//Output:
+//Quá tải toán tử >>
 QInt QInt::operator>>(int n)
 {
 	
@@ -521,6 +548,10 @@ QInt QInt::operator>>(int n)
 	return *this;
 
 }
+
+//Input:
+//Output:
+//Quá tải toán tử & (AND)
 QInt QInt::operator&(QInt other)
 {
 	QInt result;
@@ -530,6 +561,10 @@ QInt QInt::operator&(QInt other)
 	}
 	return result;
 }
+
+//Input:
+//Output:
+//Quá tải toán tử & (XOR)
 QInt QInt::operator^(QInt other)
 {
 	QInt result;
@@ -539,6 +574,10 @@ QInt QInt::operator^(QInt other)
 	}
 	return result;
 }
+
+//Input:
+//Output:
+//Quá tải toán tử & (OR)
 QInt QInt::operator|(QInt other)
 {
 	QInt result;
@@ -548,6 +587,10 @@ QInt QInt::operator|(QInt other)
 	}
 	return result;
 }
+
+//Input:
+//Output:
+//Quá tải toán tử & (NOT)
 QInt QInt::operator~()
 {
 	QInt result;
@@ -562,7 +605,11 @@ QInt QInt::operator~()
 	return *this;
 }
 
-void QInt::rol()
+
+//Input:
+//Output:
+//Xoay trái 1 bit
+void QInt::Rol()
 {
 	int lastBit = 0;
 	if ((_arrayBits[0] >> 31) & 1 == 1)
@@ -575,7 +622,11 @@ void QInt::rol()
 		_arrayBits[3] = _arrayBits[3] | 1;
 	}
 }
-void QInt::ror()
+
+//Input:
+//Output:
+//Xoay phải 1 bit
+void QInt::Ror()
 {
 	int firstBit = 0;
 	if (_arrayBits[3] & 1 == 1)
@@ -589,10 +640,12 @@ void QInt::ror()
 	}
 }
 
-
+//Input:
+//Output:
+//Quá tải toán tử = (QInt = QInt)
 QInt& QInt::operator=(QInt other)
 {
-	// TODO: insert return statement here
+	
 	this->_arrayBits[0] = other._arrayBits[0];
 	this->_arrayBits[1] = other._arrayBits[1];
 	this->_arrayBits[2] = other._arrayBits[2];

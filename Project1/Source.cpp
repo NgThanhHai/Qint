@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <vector>
 #include <fstream>
 #include "Qint.h"
@@ -38,7 +38,7 @@ void main(int argc, char* argv[])
 
 				if (tokens.size() == 3)
 				{
-					//Xu li cac dong co 3 tham so
+					//Xử lí các dòng có 3 tham số
 					if (tokens[1] == "~") //not
 					{
 						QInt x;
@@ -47,23 +47,23 @@ void main(int argc, char* argv[])
 						~x;
 						fileOut << x.Out(base) << endl;
 					}
-					else if (tokens[1] == "ror")
+					else if (tokens[1] == "ror") //quay phải
 					{
 						QInt x;
 						int base = stoi(tokens[0]);
 						x.In(tokens[2], base);
-						x.ror();
+						x.Ror();
 						fileOut << x.Out(base) << endl;
 					}
-					else if (tokens[1] == "rol")
+					else if (tokens[1] == "rol") //quay trái
 					{
 						QInt x;
 						int base = stoi(tokens[0]);
 						x.In(tokens[2], base);
-						x.rol();
+						x.Rol();
 						fileOut << x.Out(base) << endl;
 					}
-					else //Chuyen co so
+					else //Chuyển đổi cơ số
 					{
 						QInt x;
 						int base1 = stoi(tokens[0]);
@@ -74,8 +74,8 @@ void main(int argc, char* argv[])
 				}
 				else if (tokens.size() == 4)
 				{
-					//Xu li cac dong co 4 tham so
-					if (tokens[2] == "+")
+					//Xử lí các dòng có 4 tham số
+					if (tokens[2] == "+") //+
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -84,7 +84,7 @@ void main(int argc, char* argv[])
 						QInt result = a + b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "-")
+					else if (tokens[2] == "-") //-
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -93,7 +93,7 @@ void main(int argc, char* argv[])
 						QInt result = a - b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "*")
+					else if (tokens[2] == "*") //*
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -102,7 +102,7 @@ void main(int argc, char* argv[])
 						QInt result = a * b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "/")
+					else if (tokens[2] == "/") // /
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -111,7 +111,7 @@ void main(int argc, char* argv[])
 						QInt result = a / b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "^")
+					else if (tokens[2] == "^") // ^ XOR
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -120,7 +120,7 @@ void main(int argc, char* argv[])
 						QInt result = a ^ b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "|")
+					else if (tokens[2] == "|") // | OR
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -129,7 +129,7 @@ void main(int argc, char* argv[])
 						QInt result = a | b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "&")
+					else if (tokens[2] == "&") // & AND
 					{
 						QInt a, b;
 						int base = stoi(tokens[0]);
@@ -138,7 +138,7 @@ void main(int argc, char* argv[])
 						QInt result = a & b;
 						fileOut << result.Out(base) << endl;
 					}
-					else if (tokens[2] == "<<")
+					else if (tokens[2] == "<<") // << dịch trái
 					{
 						QInt x;
 						int base = stoi(tokens[0]);
@@ -147,7 +147,7 @@ void main(int argc, char* argv[])
 						x << sBit;
 						fileOut << x.Out(base) << endl;
 					}
-					else if (tokens[2] == ">>")
+					else if (tokens[2] == ">>") // >> dịch phải số học
 					{
 						QInt x;
 						int base = stoi(tokens[0]);
