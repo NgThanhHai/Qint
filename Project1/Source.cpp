@@ -4,8 +4,6 @@
 #include "Qint.h"
 using namespace std;
 
-
-
 void main(int argc, char* argv[])
 {
 	
@@ -14,6 +12,7 @@ void main(int argc, char* argv[])
 
 	fileIn.open(argv[1], ios::in);
 	fileOut.open(argv[2], ios::out);
+
 	if (!fileIn)
 		cout << "Khong tim thay file input" << endl;
 	else
@@ -31,10 +30,11 @@ void main(int argc, char* argv[])
 			string line;
 			char lineTemp[255];
 			fileIn.getline(lineTemp, 255);
+
 			if (strcmp(lineTemp, "") != 0)
 			{
 				line = lineTemp;
-				vector<string> tokens = Parse(line);
+				vector<string> tokens = Parse(line," ");
 
 				if (tokens.size() == 3)
 				{

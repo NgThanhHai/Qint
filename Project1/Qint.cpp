@@ -1,305 +1,4 @@
 ﻿#include "Qint.h"
-QInt operator+( QInt a,  QInt b)
-{
-	QInt sum;
-	int bitsA[128] = { 0 }; //127 là bit dấu
-	int bitsB[128] = { 0 };
-	a.ConvertBitToArray(bitsA);
-	b.ConvertBitToArray(bitsB);
-
-	
-	int bitsSum[128] = { 0 };
-	Add(bitsA,bitsB,bitsSum);
-
-	string result;
-	for (int i = 127; i >=0; i--)
-	{
-		result +=(bitsSum[i] + '0');
-	}
-	sum.In(result, 2);
-
-	return sum;
-}
-
-QInt operator-(QInt a, QInt b)
-{
-	QInt result;
-	int bitsA[128] = { 0 }; //127 là bit dấu
-	int bitsB[128] = { 0 };
-	a.ConvertBitToArray(bitsA);
-	b.ConvertBitToArray(bitsB);
-
-	//Chuyển B sang số bù 2
-	
-
-	int bitResult[128] = { 0 };
-	Sub(bitsA, bitsB, bitResult);
-	string strResult;
-
-	for (int i = 127; i >= 0; i--)
-	{
-		strResult += (bitResult[i] + '0');
-	}
-	result.In(strResult, 2);
-
-	return result;
-	
-}
-
-QInt operator*(QInt a, QInt b)
-{
-	QInt result;
-
-	int bitsResult[128] = { 0 };
-	int bitsA[128] = { 0 }; //127 là bit dấu
-	int bitsB[128] = { 0 };
-	a.ConvertBitToArray(bitsA);
-	b.ConvertBitToArray(bitsB);
-	for (int i = 0; i < 128; i++)
-	{
-		if (bitsB[i] == 1)
-		{
-			
-			int temp[128] = { 0 };
-			//dịch bit bitsA thành bitTemp
-			DichPhaiTrenMang(bitsA, temp, i);
-			Add(bitsResult, temp, bitsResult);
-		}
-	}
-
-
-	string strResult;
-
-	for (int i = 127; i >= 0; i--)
-	{
-		strResult += (bitsResult[i] + '0');
-	}
-	result.In(strResult, 2);
-
-	return result;
-}
-
-QInt operator/(QInt a, QInt b)
-{
-	QInt result;
-
-	int bitsResult[128] = { 0 };
-	int bitsA[128] = { 0 }; //127 là bit dấu
-	int bitsB[128] = { 0 };
-	a.ConvertBitToArray(bitsA);
-	b.ConvertBitToArray(bitsB);
-	//số nào âm thì chuyển sang bù 2 đế thành phép chia dương
-	char flagA = bitsA[127];
-	char flagB = bitsB[127];
-
-	if (bitsA[127] == 1)
-		ConvertTwoComplement(bitsA,bitsA);
-	if (bitsB[127] == 1)
-		ConvertTwoComplement(bitsB,bitsB);
-
-	for (int i = 127; i >= 0; i--)
-	{
-		int temp[128] = { 0 };
-		//Số bit lấy
-		int count = 127 - i;
-		//Lấy ra các bit đầu
-		for (int j = 0; j <= count; j++)
-		{
-			temp[j] = bitsA[j + i];
-		}
-		//Lấy các bit đó trừ cho số chia
-		Sub(temp, bitsB, temp);
-		//if()
-		if (temp[127] == 1)
-		{
-			bitsResult[i] = 0;
-		}
-		else if (temp[127] == 0)
-		{
-			bitsResult[i] = 1;
-			for (int j = 0; j <= count; j++)
-			{
-				bitsA[j + i] = temp[j];
-			}
-		}
-
-	}
-	if (flagA != flagB)
-	{
-		ConvertTwoComplement(bitsResult, bitsResult);
-	}
-	string strResult;
-
-	for (int i = 127; i >= 0; i--)
-	{
-		strResult += (bitsResult[i] + '0');
-	}
-	result.In(strResult, 2);
-
-	return result;
-}
-
-string chia2(string s)
-{
-	string temp;
-	int divisor = 0;
-	if (s.length() == 1)
-	{
-		divisor = s[0] - 48;
-		temp += (divisor / 2) + 48;
-	}
-	else
-	{
-		int i = 0;
-		divisor = s[0] - 48;
-		for (int i = 0; i < s.length() - 1; i++)
-		{
-			if (divisor < 2)
-			{
-				i++;
-				divisor = (divisor * 10) + (s[i] - 48);
-
-			}
-			char c = (divisor / 2) + 48;
-			temp += c;
-			divisor = divisor % 2;
-			i--;
-		}
-	}
-	s = temp;
-	return s;
-
-}
-string myPow(int n) //n là số mũ
-{
-	string temp = "2";
-	if (n == 0)
-		return "1";
-	if (n == 1)
-		return "2";
-	for (int i = 0; i < n - 1; i++)
-	{
-		temp = multiple2(temp);
-	}
-	return temp;
-}
-string multiple2(string s)
-{
-	int temp = 0, carry = 0;;
-	int _length = s.length();
-	int a_size = _length + 1;
-	int* a = new int[a_size];
-	string result;
-	for (int i = 0; i < a_size; i++)
-		a[i] = 0;
-	for (int i = _length - 1; i >= 0; i--)
-	{
-		temp = (s[i] - '0') * 2;
-		if (carry == 1)
-			temp++;
-		if (temp > 9)
-			carry = 1;
-		else
-			carry = 0;
-		a[i + 1] += temp % 10;
-
-	}
-	if (carry == 1)
-	{
-		a[0] = 1;
-	}
-	else
-	{
-		for (int i = 0; i < a_size - 1; i++)
-			a[i] = a[i + 1];
-		a_size--;
-	}
-	for (int i = 0; i < a_size; i++)
-	{
-		result += (a[i] + '0');
-	}
-	return result;
-}
-string plusNumInStr(string a, string b)
-{
-	string result; //biến chứa kết quả
-
-	int i = a.length() - 1;
-	int j = b.length() - 1;
-	int nho = 0;
-	while (i >= 0 && j >= 0) //Vòng lặp cộng các chữ số ở cuối của a, b 
-	{
-		int temp = (a[i] - 48) + (b[j] - 48) + nho;
-		char c = (temp % 10) + 48;
-		if (temp > 9)
-		{
-			nho = 1;
-		}
-		else
-			nho = 0;
-		result += c;
-		i--;
-		j--;
-	}
-
-	// Trường hợp số a nhiều chữ số hơn
-	while (i >= 0)
-	{
-		int temp = (a[i] - 48) + nho;
-		char c = (temp % 10) + 48;
-		if (temp > 9)
-		{
-			nho = 1;
-		}
-		else
-			nho = 0;
-		result += c;
-		i--;
-	}
-
-	//Trường hợp số b nhiều chữ số hơn
-	while (j >= 0)
-	{
-		int temp = (b[j] - 48) + nho;
-		char c = (temp % 10) + 48;
-		if (temp > 9)
-		{
-			nho = 1;
-		}
-		else
-			nho = 0;
-		result += c;
-		j--;
-	}
-
-	// Nếu sau khi cộng xong mà vẫn còn nhớ 1 thì ghi thêm 1 vào kết quả
-	if (nho == 1)
-	{
-		result += "1";
-	}
-
-	reverse(result.begin(), result.end()); //Vì kết quả lưu ngược nên phải đảo chuỗi cho đúng 
-	return result;
-}
-
-
-void QInt::ConvertBitToArray(int array[])
-{
-	
-	int curPos = 3;
-	int checkBit = 0;
-
-	for (int i = 0; i < 128; i++)
-	{
-		array[i] = 1 & (_arrayBits[curPos] >> checkBit);
-		checkBit++;
-		if (checkBit == 32)
-		{
-			checkBit = 0;
-			curPos--;
-		}
-	}
-}
 
 QInt::QInt()
 {
@@ -318,7 +17,7 @@ void QInt::In(string strData, int base)
 
 	if (base == 2)
 	{
-		
+
 		int curPos = 3;
 		int checkBit = 0;
 		for (int i = strData.length() - 1; i >= 0; i--)
@@ -335,112 +34,71 @@ void QInt::In(string strData, int base)
 	else if (base == 10)
 	{
 		//Xử lí nhập cơ số 10
-		char a[128] = { 0 };
+		char bits[128] = { 0 };
 		int i = 0;
 
-		if (strData[0] != '-')
+		if (strData[0] != '-') //Số dương
 		{
 			while (strData != "0")
 			{
-				//Xét số cuối cùng của chuỗi, nếu là số chẵn khi chia 2 sẽ dư 0 
+				//Xét số cuối cùng của chuỗi, số chẵn thì bit là 0
 				if ((strData[strData.length() - 1] - 48) % 2 == 0)
 				{
-					a[i] = 0;
+					bits[i] = 0;
 					i++;
 				}
-				//Nếu là số lẻ, chia 2 sẽ dư 1
+				//Nếu là số lẻ, bit là 1
 				else
 				{
-					a[i] = 1;
+					bits[i] = 1;
 					i++;
 				}
-
 				//Chia chuỗi s cho 2
-				strData = chia2(strData);
-				if (i > 127)
-				{
-					throw "Stack Overflow";
-				}
+				strData = Div2(strData);
 
 			};
-			a[127] = 0; //Bit dấu
+			bits[127] = 0; //Bit dấu là 0 do là số dương
 		}
-		else //Số nhập vào là số âm
+		else //Số âm
 		{
-			string positive_s;
-			for (int i = 1; i < strData.length(); i++) //Lấy phần sau dấu âm của số
-			{
-				positive_s += strData[i];
-			}
+			string posS;
+			posS = strData.substr(1, strData.length() - 1); //Lấy chuỗi sau dấu âm
 			i = 0;
-			while (positive_s != "0")
+			while (posS != "0") //tương tự phần số dương
 			{
 				//Xét số cuối cùng của chuỗi, nếu là số chẵn khi chia 2 sẽ dư 0 
-				if ((positive_s[positive_s.length() - 1] - 48) % 2 == 0)
+				if ((posS[posS.length() - 1] - 48) % 2 == 0)
 				{
-					a[i] = 0;
+					bits[i] = 0;
 					i++;
 				}
 				//Nếu là số lẻ, chia 2 sẽ dư 1
 				else
 				{
-					a[i] = 1;
+					bits[i] = 1;
 					i++;
 				}
 
 				//Chia chuỗi s cho 2
-				positive_s = chia2(positive_s);
-				if (i > 128)
-				{
-					throw "Stack Overflow";
-				}
+				posS = Div2(posS);
+				
 
 			};
-			a[127] = 1; //Bit dấu
-			int dem = i;
-			// Đảo bit thành dạng bù 1
-			for (int i = 0; i < 127; i++)
-			{
-				if (a[i] == 1)
-				{
-					a[i] = 0;
-				}
-				else
-				{
-					a[i] = 1;
-				}
-			}
-
-			//Cộng 1 vào kết quả thành dạng bù 2
-			for (int i = 0; i < 127; i++)
-			{
-				if (a[i] == 1)
-				{
-					a[i] = 0;
-				}
-				else
-				{
-					a[i] = 1;
-					break;
-				}
-			}
-			if (dem == 126)
-			{
-				a[0] = 0;
-			}
+			bits[127] = 0;
+			
+			ConvertTwoComplement(bits, bits);//Chuyển sang s
 		}
 
-		// Bật các bit của data bằng cách OR với giá trị của mảng a tương ứng, bit dấu a[127]
-		int count = 0;
-		int d = 0;
+		int curPos = 0;
+		int checkBit = 0;
 		for (int i = 127; i >= 0; i--)
 		{
-			_arrayBits[d] = _arrayBits[d] | (a[i] << (32 - 1 - count));
-			count++;
-			if (count == 32)
+			_arrayBits[curPos] = _arrayBits[curPos] | (bits[i] << (32 - 1 - checkBit));
+			checkBit++;
+			if (checkBit == 32)
 			{
-				count = 0;
-				d++;
+				checkBit = 0;
+				curPos++;
 			}
 		}
 	}
@@ -468,129 +126,62 @@ string QInt::Out(int base)
 {
 	string result;
 
+	char bits[128] = { 0 };
+	ConvertBitToArray(bits);//lấy dữ liệu ra mảng
+
 	if (base == 2)
 	{
-	
 		//Xử lí xuất _arrBit sang hệ 2
-		int bits[128] = { 0 };
-		int curPos = 3;
-		int checkBit = 0;
-
-		for (int i = 0; i < 128; i++)
-		{
-			bits[i] = 1 & (_arrayBits[curPos] >> checkBit);
-			checkBit++;
-			if (checkBit == 32)
-			{
-				checkBit = 0;
-				curPos--;
-			}
-		}
-
-		for (int i = 127; i >= 0; i--)
-		{
-			result += (bits[i] + 48);
-		}
-
-		//return result;
-		//Xuất chuỗi từ bit 1 đầu tiên.
 		
+		for (int i = 127; i >= 0; i--)
+			result += (bits[i] + 48);
+
 
 	}
 	else if (base == 10)
 	{
 		//Xử lí xuất _arrBit sang hệ 10
-		unsigned int a[128] = { 0 };
-		// Đọc các bit của data lưu vào mảng a, bit dấu là bit a[127]
-		int d = 3, count = 0;
-		for (int i = 0; i < 128; i++)
-		{
-			a[i] = 1 & (_arrayBits[d] >> count);
-			count++;
-			if (count == 32)
-			{
-				count = 0;
-				d--;
-			}
-		}
-
 
 		result = "0";
 		string temp;
-		if (a[127] == 0) //Bit dấu = 0
+
+		if (bits[127] == 0) //Bit dấu = 0 Số dương
 		{
-			for (int i = 0; i < 127; i++)
+			for (int i = 0; i < 128; i++)
 			{
-				if (a[i] == 1)
+				if (bits[i] == 1)
 				{
-					temp = myPow(i);
-					result = plusNumInStr(result, temp);
+					temp = MyPow(i);
+					result = AddStr(result, temp);
 				}
 			}
 		}
-		else //Bit dấu = 1
+		else //Bit dấu = 1 Số âm
 		{
-			// Trừ 1 để thành dạng bù 1
-			for (int i = 0; i < 128; i++)
-			{
-				if (a[i] == 0)
-				{
-					a[i] = 1;
-				}
-				else
-				{
-					a[i] = 0;
-					break;
-				}
-			}
-			// Đảo bit
-			for (int i = 0; i < 128; i++)
-			{
-				if (a[i] == 1)
-					a[i] = 0;
-				else
-					a[i] = 1;
-			}
+			
+			ConvertTwoComplement(bits, bits);//Chuyển về số đối
 
 			for (int i = 0; i < 128; i++) //Tính giá trị như dạng không dấu
 			{
-				if (a[i] == 1)
+				if (bits[i] == 1)
 				{
-					temp = myPow(i);
-					result = plusNumInStr(result, temp);
+					temp = MyPow(i);
+					result = AddStr(result, temp);
 				}
 			}
-			reverse(result.begin(), result.end()); //Đảo chuỗi
-			result += "-"; //Thêm dấu âm vào cuối chuỗi
-			reverse(result.begin(), result.end()); //Đảo chuỗi cho đúng kết quả
-			if (result == "-0")
-			{
+			result = "-" + result;
 
-			}
+			if (result == "-0")
+				result = "0";
+
 		}
-		//return result;
+		
 	}
 	else if (base == 16)
 	{
 		//Xử lí xuất _arrBit sang hệ 16
-		//
-		int bits[128] = { 0 };
-		int curPos = 3;
-		int checkBit = 0;
 
-		for (int i = 0; i < 128; i++)
-		{
-			bits[i] = 1 & (_arrayBits[curPos] >> checkBit);
-			checkBit++;
-			if (checkBit == 32)
-			{
-				checkBit = 0;
-				curPos--;
-			}
-		}
-		//
-
-		for (int i = 31; i >=0; i--)
+		for (int i = 31; i >= 0; i--)
 		{
 			int value = bits[i * 4 + 3] * 8 + bits[i * 4 + 2] * 4 + bits[i * 4 + 1] * 2 + bits[i * 4];
 			if (value < 10)
@@ -622,9 +213,6 @@ string QInt::Out(int base)
 			}
 			value = 0;
 		}
-		
-		//return result;
-
 
 	}
 
@@ -643,38 +231,176 @@ string QInt::Out(int base)
 	return result;
 }
 
+QInt operator+( QInt a,  QInt b)
+{
+	QInt sum;
+	char bitsA[128] = { 0 }; //127 là bit dấu
+	char bitsB[128] = { 0 };
+
+	a.ConvertBitToArray(bitsA);
+	b.ConvertBitToArray(bitsB);
+
+	
+	char bitsSum[128] = { 0 };
+	Add(bitsA,bitsB,bitsSum);
+
+	string result;
+	for (int i = 127; i >=0; i--)
+	{
+		result +=(bitsSum[i] + '0');
+	}
+	sum.In(result, 2);
+
+	return sum;
+}
+
+QInt operator-(QInt a, QInt b)
+{
+	QInt result;
+	char bitsA[128] = { 0 }; //127 là bit dấu
+	char bitsB[128] = { 0 };
+	a.ConvertBitToArray(bitsA);
+	b.ConvertBitToArray(bitsB);
+
+	//Chuyển B sang số bù 2
+	
+
+	char bitResult[128] = { 0 };
+	Sub(bitsA, bitsB, bitResult);
+	string strResult;
+
+	for (int i = 127; i >= 0; i--)
+	{
+		strResult += (bitResult[i] + '0');
+	}
+	result.In(strResult, 2);
+
+	return result;
+	
+}
+
+QInt operator*(QInt a, QInt b)
+{
+	QInt result;
+
+	char bitsResult[128] = { 0 };
+	char bitsA[128] = { 0 }; //127 là bit dấu
+	char bitsB[128] = { 0 };
+
+	a.ConvertBitToArray(bitsA);
+	b.ConvertBitToArray(bitsB);
+
+	for (int i = 0; i < 128; i++)
+	{
+		if (bitsB[i] == 1)
+		{
+			
+			char temp[128] = { 0 };
+			//dịch bit bitsA thành bitTemp
+			DichPhaiTrenMang(bitsA, temp, i);
+			Add(bitsResult, temp, bitsResult);
+		}
+	}
+
+
+	string strResult;
+
+	for (int i = 127; i >= 0; i--)
+	{
+		strResult += (bitsResult[i] + '0');
+	}
+	result.In(strResult, 2);
+
+	return result;
+}
+
+QInt operator/(QInt a, QInt b)
+{
+	QInt result;
+
+	char bitsResult[128] = { 0 };
+	char bitsA[128] = { 0 }; //127 là bit dấu
+	char bitsB[128] = { 0 };
+
+	a.ConvertBitToArray(bitsA);
+	b.ConvertBitToArray(bitsB);
+
+	//số nào âm thì chuyển sang bù 2 đế thành phép chia dương
+	char flagA = bitsA[127];
+	char flagB = bitsB[127];
+
+	if (bitsA[127] == 1)
+		ConvertTwoComplement(bitsA,bitsA);
+	if (bitsB[127] == 1)
+		ConvertTwoComplement(bitsB,bitsB);
+
+	for (int i = 127; i >= 0; i--)
+	{
+		char temp[128] = { 0 };
+		//Số bit lấy
+		int count = 127 - i;
+		//Lấy ra các bit đầu
+		for (int j = 0; j <= count; j++)
+		{
+			temp[j] = bitsA[j + i];
+		}
+		//Lấy các bit đó trừ cho số chia
+		Sub(temp, bitsB, temp);
+		//
+		if (temp[127] == 1)
+			bitsResult[i] = 0;
+
+		else if (temp[127] == 0)
+		{
+			bitsResult[i] = 1;
+
+			for (int j = 0; j <= count; j++)
+			{
+				bitsA[j + i] = temp[j];
+			}
+		}
+
+	}
+	if (flagA != flagB) //Nếu 2 số trái dấu thì lấy số đối của thương
+		ConvertTwoComplement(bitsResult, bitsResult);
+
+	string strResult;
+
+	for (int i = 127; i >= 0; i--)
+		strResult += (bitsResult[i] + '0');
+
+	result.In(strResult, 2);
+
+	return result;
+}
+
+
+
+
+void QInt::ConvertBitToArray(char array[])
+{
+	
+	int curPos = 3;
+	int checkBit = 0;
+
+	for (int i = 0; i < 128; i++)
+	{
+		array[i] = 1 & (_arrayBits[curPos] >> checkBit);
+		checkBit++;
+		if (checkBit == 32)
+		{
+			checkBit = 0;
+			curPos--;
+		}
+	}
+}
+
+
 string QInt::Convert(string strData, int base1, int base2)
 {
 	this->In(strData, base1);
 	return this->Out(base2);
 }
-
-string QInt::DecToBin()
-{
-	int array[128] = { 0 };
-	int arraySize = 3;
-	int tranBit = 0;
-
-	for (int i = 0; i < 128; i++)
-	{
-		array[i] = 1 & (_arrayBits[arraySize] >> tranBit);
-		tranBit++;
-		if (tranBit == 32)
-		{
-			tranBit = 0;
-			arraySize--;	
-		}
-	}
-
-	string returnStr;
-
-	for (int i = 128; i >= 0; i--)
-	{
-		returnStr += (array[i] + 48);
-	}
-	return returnStr;
-}
-
 
 
 string QInt::HexToBin(string str)
@@ -742,153 +468,44 @@ string QInt::HexToBin(string str)
 	}
 	return bin;
 }
-string QInt::BinToHex(string bin)
-{
-	int binLength = bin.length();
-	int hexLength = (binLength % 4 == 0) ? (binLength / 4) : (binLength / 4 + 1);
 
-	char* listBit = new char[hexLength * 4];
-
-	int posBin = binLength - 1;
-	for (int i = 0; i < hexLength * 4; i++)
-		listBit[i]=0;
-	int pos = hexLength * 4 - 1;
-	while (posBin >= 0)
-	{
-		listBit[pos] = bin[posBin]-48;
-		posBin--;
-		pos--;
-	}
-	string result;
-
-	for (int i = 0; i < hexLength; i++)
-	{
-		int value = listBit[i * 4] * 8 + listBit[i * 4 + 1] * 4 + listBit[i * 4 + 2] * 2 + listBit[i * 4 + 3];
-		if (value < 10)
-			result += (value + '0');
-		else
-		{
-			switch (value)
-			{
-			case 10:
-				result += "A";
-				break;
-			case 11:
-				result += "B";
-				break;
-			case 12:
-				result += "C";
-				break;
-			case 13:
-				result += "D";
-				break;
-			case 14:
-				result += "E";
-				break;
-			case 15:
-				result += "F";
-				break;
-			}
-			
-		}
-		value = 0;
-	}
-	delete[] listBit;
-	return result;
-}
-string QInt::DecToHex()
-{
-	string bin=this->DecToBin();
-	
-	string result = BinToHex(bin);
-
-	return result;
-}
-QInt QInt::HexToDec(string hex)
-{
-	string bin = HexToBin(hex);
-	
-	return *this;
-}
 
 QInt QInt::operator<<(int n)
-{/*
-	int array[4] = {0};
-	for (int i = 0; i < 4; i++)
-	{
-		array[i] = array[i] | _arrayBits[i];
-		
-	}
-	if (n < 0)
-	{
-		exit(0);
-	}
-	else if ( n == 0 )
-	{
-		return *this;
-	}
-	else
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (i == 3)
-			{
-				_arrayBits[i] = _arrayBits[i] << n;
-			}
-			else
-			{
-				_arrayBits[i] = (_arrayBits[i] << n) | (array[i + 1] >> (32 - n));
-			}
-		}
-	}
-	return *this;*/
+{
+	
 	string str;
-	int bits[128] = { 0 };
+
+	char bits[128] = { 0 };
+
 	ConvertBitToArray(bits);
-	int temp[128] = { 0 };
+
+	char temp[128] = { 0 };
 	DichPhaiTrenMang(bits, temp, n);
+
 	for (int i = 127; i >= 0; i--)
-	{
 		str += (temp[i] + 48);
-	}
+
 	this->In(str, 2);
+
 	return *this;
 }
 QInt QInt::operator>>(int n)
 {
-	/*if (n < 0)
-	{
-		exit(0);
-	}
-	else if ( n == 0 )
-	{
-		return *this;
-	}
-	else 
-	{
-		for (int i = 3; i >= 0; i--)
-		{
-			if (i == 0)
-			{
-				_arrayBits[i] = _arrayBits[i] >> n;
-			}
-			else
-			{
-				_arrayBits[i] = (_arrayBits[i] >> n) | (_arrayBits[i - 1] << (32 - n));
-			}
-		}
-	}
-	return *this;*/
+	
 	string str;
-	bool flag = true;
-	int bits[128] = { 0 };
+
+	bool flag = true;//true-số dương, false-số âm
+	char bits[128] = { 0 };
+
 	ConvertBitToArray(bits);
 	if (bits[127] == 1)
 	{
 		flag = false;
 	}
-	int temp[128] = { 0 };
+
+	char temp[128] = { 0 };
 	DichTraiTrenMang(bits, temp, n);
+
 	for (int i = 127; i >= 0; i--)
 	{
 		if (127 - i < n && flag == false)
@@ -900,6 +517,7 @@ QInt QInt::operator>>(int n)
 	}
 	
 	this->In(str, 2);
+
 	return *this;
 
 }
@@ -943,22 +561,6 @@ QInt QInt::operator~()
 	}
 	return *this;
 }
-bool QInt::operator<(QInt other)
-{
-	if (_arrayBits[0] != other._arrayBits[0])
-	{
-		if (_arrayBits[0] == 0)
-		{
-			return false;
-		}
-		else {
-			return true;
-		}
-	}
-	else
-	{
-	}
-}
 
 void QInt::rol()
 {
@@ -987,86 +589,6 @@ void QInt::ror()
 	}
 }
 
-void Add(int bits1[], int bits2[], int result[])
-{
-	
-	int mark = 0;
-	for (int i = 0; i < 128; i++)
-	{
-		int sumBit = bits1[i] + bits2[i] + mark;
-
-		result[i] = sumBit % 2;
-		mark = sumBit / 2;
-	}
-}
-
-void Sub(int bits1[], int bits2[], int result[])
-{
-	int temp[128] = { 0 };
-	ConvertTwoComplement(bits2,temp);
-	Add(bits1, temp, result);
-}
-
-void ConvertTwoComplement(int bitsSource[], int bitsDes[])
-{
-	for (int i = 0; i < 128; i++)
-	{
-		if (bitsSource[i] == 0)
-			bitsDes[i] = 1;
-		else if (bitsSource[i] == 1)
-			bitsDes[i] = 0;
-	}
-	int temp[128] = { 0 }; temp[0] = { 1 };
-	Add(bitsDes, temp, bitsDes);
-}
-
-void DichPhaiTrenMang(int arrSource[], int arrDes[], int k)
-{
-	
-	int pos = 0;
-	while (pos+k < 128)
-	{
-		arrDes[pos + k] = arrSource[pos];
-		pos++;
-	}
-	
-}
-
-void DichTraiTrenMang(int arrSource[], int arrDes[], int k)// đối với bit dấu 127 là 0
-{
-	int pos = 127;
-	while (pos - k >=0 )
-	{
-		arrDes[pos - k] = arrSource[pos];
-		pos--;
-	}
-}
-
-vector<string> Parse(string line)
-{
-	vector<string> tokens;
-
-	string seperator = " ";
-	int startPos = 0;
-	//tham khao phan tach chuoi trong lab08 - OOP
-	size_t foundPos = line.find(seperator, startPos);
-
-	while (foundPos != string::npos)
-	{
-		int count = foundPos - startPos;
-		string token = line.substr(startPos, count);
-
-		tokens.push_back(token);
-		startPos = foundPos + seperator.length();
-		foundPos = line.find(seperator, startPos);
-	}
-
-	int count = line.length() - startPos;
-	string token = line.substr(startPos, count);
-	tokens.push_back(token);
-
-	return tokens;
-}
 
 QInt& QInt::operator=(QInt other)
 {
